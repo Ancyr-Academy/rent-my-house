@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './application/controllers/app-controller';
-import { AppService } from './application/services/app-service';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+
+import { AppController } from './application/controllers/app-controller';
+import { AppService } from './application/services/app-service';
 
 @Module({
   imports: [

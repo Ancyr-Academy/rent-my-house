@@ -9,7 +9,7 @@ export class MikroOrmProvider {
   static async create() {
     const orm = await MikroORM.init({
       clientUrl: 'postgresql://user:azerty123@localhost:7654/rentmyhouse',
-      entities: ['./src/**/infrastructure/persistence/sql/entities/*.ts'],
+      entities: ['./src/**/infrastructure/database/sql/entities/*.ts'],
       baseDir: path.join(__dirname, '../../../'),
       extensions: [Migrator],
       metadataProvider: TsMorphMetadataProvider,
