@@ -7,12 +7,10 @@ export class MikroOrmProvider {
   constructor(private orm: MikroORM) {}
 
   static async create() {
-    console.log('orm path : ' + path.join(__dirname, '../../../../../'));
-
     const orm = await MikroORM.init({
       clientUrl: 'postgresql://user:azerty123@localhost:7654/rentmyhouse',
       entities: ['./src/**/infrastructure/persistence/sql/entities/*.ts'],
-      baseDir: path.join(__dirname, '../../../../../'),
+      baseDir: path.join(__dirname, '../../../'),
       extensions: [Migrator],
       metadataProvider: TsMorphMetadataProvider,
       dynamicImportProvider: (id) => import(id),
