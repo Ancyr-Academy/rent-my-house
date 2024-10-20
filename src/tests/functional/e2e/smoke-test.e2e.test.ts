@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../../../application/controllers/app-controller';
-import { AppService } from '../../../application/services/app-service';
+import { Tester } from '../../runner/test-runner';
 
 describe('Smoke Test', () => {
+  const tester = new Tester();
   let appController: AppController;
 
-  beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
-    }).compile();
+  beforeAll(() => tester.beforeAll());
+  afterEach(() => tester.afterEach());
+  afterAll(() => tester.afterAll());
 
-    appController = app.get<AppController>(AppController);
+  beforeEach(async () => {
+    await tester.beforeEach();
+    appController = tester.get<AppController>(AppController);
   });
 
   describe('root', () => {
