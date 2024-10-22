@@ -1,17 +1,7 @@
 import { Reservation } from '../../domain/entities/reservation';
-import { House } from '../../domain/entities/house';
-
-export interface IReservationRepository {
-  save(entity: Reservation): Promise<void>;
-}
-
-export interface IHouseRepository {
-  findById(id: string): Promise<House | null>;
-}
-
-export interface IIdProvider {
-  nextId(): string;
-}
+import { IIdProvider } from '../services/id-provider/id-provider';
+import { IHouseRepository } from '../ports/house-repository';
+import { IReservationRepository } from '../ports/reservation-repository';
 
 export class ReserveHouseCommand {
   constructor(

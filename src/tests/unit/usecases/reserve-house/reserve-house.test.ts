@@ -1,41 +1,11 @@
 import {
-  IHouseRepository,
-  IIdProvider,
-  IReservationRepository,
   ReserveHouseCommand,
   ReserveHouseCommandHandler,
 } from '../../../../application/commands/reserve-house';
-import { Reservation } from '../../../../domain/entities/reservation';
 import { House } from '../../../../domain/entities/house';
-
-class RamReservationRepository implements IReservationRepository {
-  constructor(public readonly database: Reservation[] = []) {}
-
-  async save(entity: Reservation): Promise<void> {
-    this.database.push(entity);
-  }
-
-  async findById(id: string): Promise<Reservation | null> {
-    return (
-      this.database.find((reservation) => reservation.getId() === id) || null
-    );
-  }
-}
-
-class RamHouseRepository implements IHouseRepository {
-  constructor(public readonly database: House[] = []) {}
-
-  async findById(id: string): Promise<House | null> {
-    return this.database.find((house) => house.getId() === id) || null;
-  }
-}
-
-class FixedIdProvider implements IIdProvider {
-  constructor(public readonly ID = '2') {}
-  nextId(): string {
-    return this.ID;
-  }
-}
+import { RamReservationRepository } from '../../../../infrastructure/database/ram/ram-reservation-repository';
+import { RamHouseRepository } from '../../../../infrastructure/database/ram/ram-house-repository';
+import { FixedIdProvider } from '../../../../application/services/id-provider/fixed-id-provider';
 
 describe('Feature: reserving a house', () => {
   let reservationRepository: RamReservationRepository;
