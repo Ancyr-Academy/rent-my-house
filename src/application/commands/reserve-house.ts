@@ -2,6 +2,7 @@ import { Reservation } from '../../domain/entities/reservation';
 import { IIdProvider } from '../services/id-provider/id-provider';
 import { IHouseRepository } from '../ports/house-repository';
 import { IReservationRepository } from '../ports/reservation-repository';
+import { AuthContext } from '../../domain/models/auth-context';
 
 export class ReserveHouseCommand {
   constructor(
@@ -10,6 +11,7 @@ export class ReserveHouseCommand {
       startDate: string;
       endDate: string;
     },
+    public readonly auth: AuthContext,
   ) {}
 }
 
@@ -20,7 +22,7 @@ export class ReserveHouseCommandHandler {
     private readonly idProvider: IIdProvider,
   ) {}
 
-  async execute({ props }: ReserveHouseCommand) {
+  async execute({ props, auth }: ReserveHouseCommand) {
     const house = await this.houseRepository.findById(props.houseId);
     if (house === null) {
       throw new Error('House not found');
@@ -28,6 +30,7 @@ export class ReserveHouseCommandHandler {
 
     const reservation = new Reservation({
       id: this.idProvider.nextId(),
+      tenantId: auth.getId(),
       houseId: props.houseId,
       startDate: new Date(props.startDate),
       endDate: new Date(props.endDate),

@@ -1,6 +1,7 @@
 type State = {
   id: string;
   houseId: string;
+  tenantId: string;
   startDate: Date;
   endDate: Date;
 };
@@ -26,5 +27,9 @@ export class Reservation {
 
   getHouseId() {
     return this.state.houseId;
+  }
+
+  getTenantId() {
+    return this.state.tenantId;
   }
 }

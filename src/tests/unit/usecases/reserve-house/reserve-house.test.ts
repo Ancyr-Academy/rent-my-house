@@ -6,6 +6,7 @@ import { House } from '../../../../domain/entities/house';
 import { RamReservationRepository } from '../../../../infrastructure/database/ram/ram-reservation-repository';
 import { RamHouseRepository } from '../../../../infrastructure/database/ram/ram-house-repository';
 import { FixedIdProvider } from '../../../../application/services/id-provider/fixed-id-provider';
+import { AuthContext } from '../../../../domain/models/auth-context';
 
 describe('Feature: reserving a house', () => {
   let reservationRepository: RamReservationRepository;
@@ -27,11 +28,14 @@ describe('Feature: reserving a house', () => {
 
   describe('Scenario: happy path', () => {
     it('should reserve a house', async () => {
-      const command = new ReserveHouseCommand({
-        houseId: 'house-id',
-        startDate: '2024-01-01',
-        endDate: '2024-01-02',
-      });
+      const command = new ReserveHouseCommand(
+        {
+          houseId: 'house-id',
+          startDate: '2024-01-01',
+          endDate: '2024-01-02',
+        },
+        new AuthContext({ id: 'requester-id' }),
+      );
 
       await commandHandler.execute(command);
 
@@ -41,16 +45,20 @@ describe('Feature: reserving a house', () => {
       expect(reservation.getStartDate()).toEqual(new Date('2024-01-01'));
       expect(reservation.getEndDate()).toEqual(new Date('2024-01-02'));
       expect(reservation.getHouseId()).toEqual('house-id');
+      expect(reservation.getTenantId()).toEqual('requester-id');
     });
   });
 
   describe('Scenario: the house does not exist', () => {
     it('should reject', async () => {
-      const command = new ReserveHouseCommand({
-        houseId: 'not-a-house',
-        startDate: '2024-01-01',
-        endDate: '2024-01-02',
-      });
+      const command = new ReserveHouseCommand(
+        {
+          houseId: 'not-a-house',
+          startDate: '2024-01-01',
+          endDate: '2024-01-02',
+        },
+        new AuthContext({ id: '1' }),
+      );
 
       await expect(() => commandHandler.execute(command)).rejects.toThrow(
         'House not found',
