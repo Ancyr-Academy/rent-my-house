@@ -1,5 +1,6 @@
 type State = {
   id: string;
+  emailAddress: string;
 };
 
 export class AuthContext {
@@ -7,5 +8,9 @@ export class AuthContext {
 
   getId() {
     return this.state.id;
+  }
+
+  getEmailAddress() {
+    return this.state.emailAddress;
   }
 }

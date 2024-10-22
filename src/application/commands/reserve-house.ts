@@ -3,6 +3,8 @@ import { IIdProvider } from '../services/id-provider/id-provider';
 import { IHouseRepository } from '../ports/house-repository';
 import { IReservationRepository } from '../ports/reservation-repository';
 import { AuthContext } from '../../domain/models/auth-context';
+import { Mail } from '../../domain/models/mail';
+import { IMailer } from '../ports/mailer';
 
 export class ReserveHouseCommand {
   constructor(
@@ -20,6 +22,7 @@ export class ReserveHouseCommandHandler {
     private readonly reservationRepository: IReservationRepository,
     private readonly houseRepository: IHouseRepository,
     private readonly idProvider: IIdProvider,
+    private readonly mailer: IMailer,
   ) {}
 
   async execute({ props, auth }: ReserveHouseCommand) {
@@ -37,5 +40,14 @@ export class ReserveHouseCommandHandler {
     });
 
     await this.reservationRepository.save(reservation);
+
+    await this.mailer.send(
+      new Mail({
+        to: auth.getEmailAddress(),
+        from: 'noreply@rentmyhouse.fr',
+        subject: 'Your reservation',
+        body: 'Your reservation has been successfully sent to the owner of the house',
+      }),
+    );
   }
 }
