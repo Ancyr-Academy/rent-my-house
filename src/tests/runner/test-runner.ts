@@ -40,7 +40,6 @@ export class Tester implements ITester {
     await this.app.init();
     await this.app.getHttpAdapter().getInstance().ready();
 
-    console.log('initializing this shit');
     this.orm = new MikroOrmProvider(this.app.get(MikroORM));
     await this.orm.init();
   }
