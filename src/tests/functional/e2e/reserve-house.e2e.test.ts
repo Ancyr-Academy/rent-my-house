@@ -73,6 +73,23 @@ describe('Feature: reserving a house', () => {
       expect(reservation.getHouseId()).toEqual('house-id');
       expect(reservation.getStartDate()).toEqual(new Date('2024-01-03'));
       expect(reservation.getEndDate()).toEqual(new Date('2024-01-05'));
+
+      const mailTester = tester.getMailTester();
+      expect(
+        mailTester.didSendMail({
+          to: 'anthony@ancyracademy.fr',
+          from: 'noreply@rentmyhouse.fr',
+          subject: 'Your reservation',
+        }),
+      ).toBe(true);
+
+      expect(
+        mailTester.didSendMail({
+          to: 'host@rentmyhouse.fr',
+          from: 'noreply@rentmyhouse.fr',
+          subject: 'You have a pending reservation',
+        }),
+      ).toBe(true);
     });
   });
 });

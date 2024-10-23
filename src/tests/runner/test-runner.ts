@@ -13,6 +13,8 @@ import { IMailTester } from './mail-tester.interface';
 import { testConfig } from '../setup/test-config';
 import { AppModule } from '../../app-module';
 import { MikroOrmProvider } from './mikro-orm-provider';
+import { I_MAILER } from '../../application/ports/mailer';
+import { RamMailer } from '../../infrastructure/mailer/ram/ram-mailer';
 
 export class Tester implements ITester {
   private app: NestFastifyApplication;
@@ -83,10 +85,11 @@ export class Tester implements ITester {
   }
 
   getMailTester(): IMailTester {
-    return {
-      assertOnlyOne: () => {
-        throw new Error('Method not implemented.');
-      },
-    };
+    const mailer = this.get<RamMailer>(I_MAILER);
+    if (!(mailer instanceof RamMailer)) {
+      throw new Error('Mailer not supported');
+    }
+
+    return mailer;
   }
 }
