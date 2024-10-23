@@ -16,6 +16,9 @@ export class RamMailer implements IMailer {
     });
   }
 
+  getMails() {
+    return this.mails;
+  }
   async send(mail: Mail): Promise<void> {
     this.mails.push(mail);
   }

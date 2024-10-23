@@ -29,7 +29,7 @@ describe('Feature: reserving a house', () => {
       new UserFixture(
         new User({
           id: 'host',
-          emailAddress: 'host@ancyracademy.fr',
+          emailAddress: 'host@rentmyhouse.fr',
         }),
       ),
       new HouseFixture(
@@ -75,6 +75,7 @@ describe('Feature: reserving a house', () => {
       expect(reservation.getEndDate()).toEqual(new Date('2024-01-05'));
 
       const mailTester = tester.getMailTester();
+
       expect(
         mailTester.didSendMail({
           to: 'anthony@ancyracademy.fr',
