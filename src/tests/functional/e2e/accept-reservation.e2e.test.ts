@@ -8,6 +8,10 @@ import { HouseCalendarFixture } from '../fixtures/house-calendar-fixture';
 import { HouseCalendarFactory } from '../../../domain/entities/house-calendar-factory';
 import { ReservationFixture } from '../fixtures/reservation-fixture';
 import { ReservationFactory } from '../../../domain/entities/reservation-factory';
+import {
+  I_RESERVATION_REPOSITORY,
+  IReservationRepository,
+} from '../../../application/ports/reservation-repository';
 
 describe('Feature: accept a reservation', () => {
   const tester = new Tester();
@@ -63,6 +67,13 @@ describe('Feature: accept a reservation', () => {
         })
         .set('Authorization', host.authorize())
         .expect(200);
+
+      const reservationRepository = tester.get<IReservationRepository>(
+        I_RESERVATION_REPOSITORY,
+      );
+      const reservation =
+        await reservationRepository.findById('reservation-id');
+      expect(reservation.isAccepted()).toBe(true);
     });
   });
 });
