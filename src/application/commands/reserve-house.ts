@@ -69,6 +69,7 @@ export class ReserveHouseCommandHandler {
       houseId: data.houseId,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
+      status: 'PENDING',
     });
 
     await this.reservationRepository.save(reservation);

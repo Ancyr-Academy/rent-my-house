@@ -17,4 +17,8 @@ export class House {
   getHostId() {
     return this.state.hostId;
   }
+
+  isHost(id: string) {
+    return this.state.hostId === id;
+  }
 }

@@ -28,4 +28,7 @@ export class SqlReservation {
 
   @Property()
   endDate: Date;
+
+  @Property()
+  status: string;
 }

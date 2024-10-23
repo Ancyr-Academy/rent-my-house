@@ -1,9 +1,12 @@
-type State = {
+export type Status = 'PENDING' | 'ACCEPTED' | 'REFUSED';
+
+export type State = {
   id: string;
   houseId: string;
   tenantId: string;
   startDate: Date;
   endDate: Date;
+  status: Status;
 };
 
 export class Reservation {
@@ -31,5 +34,25 @@ export class Reservation {
 
   getTenantId() {
     return this.state.tenantId;
+  }
+
+  getStatus() {
+    return this.state.status;
+  }
+
+  isAccepted() {
+    return this.state.status === 'ACCEPTED';
+  }
+
+  accept() {
+    this.state.status = 'ACCEPTED';
+  }
+
+  clone() {
+    return new Reservation({ ...this.state });
+  }
+
+  isRefused() {
+    return this.state.status === 'REFUSED';
   }
 }

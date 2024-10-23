@@ -3,7 +3,7 @@ import { SqlUser } from '../entities/sql-user';
 import { SqlHouse } from '../entities/sql-house';
 import { IReservationRepository } from '../../../../application/ports/reservation-repository';
 import { SqlReservation } from '../entities/sql-reservation';
-import { Reservation } from '../../../../domain/entities/reservation';
+import { Reservation, Status } from '../../../../domain/entities/reservation';
 
 export class SqlReservationRepository implements IReservationRepository {
   constructor(
@@ -23,6 +23,7 @@ export class SqlReservationRepository implements IReservationRepository {
       tenantId: entity.tenant.id,
       startDate: entity.startDate,
       endDate: entity.endDate,
+      status: entity.status as Status,
     });
   }
 
@@ -39,6 +40,7 @@ export class SqlReservationRepository implements IReservationRepository {
     record.tenant = ref(SqlUser, reservation.getTenantId());
     record.startDate = reservation.getStartDate();
     record.endDate = reservation.getEndDate();
+    record.status = reservation.getStatus();
 
     await this.entityManager.persistAndFlush(record);
   }
