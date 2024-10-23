@@ -16,6 +16,18 @@ export const WithAuthContext = createParamDecorator(
   },
 );
 
+async function authenticate(userRepository: IUserRepository, token: string) {
+  const user = await userRepository.findById(token);
+  if (!user) {
+    return null;
+  }
+
+  return new AuthContext({
+    id: user.getId(),
+    emailAddress: user.getEmailAddress(),
+  });
+}
+
 @Injectable()
 export class AppAuthGuard implements CanActivate {
   constructor(
@@ -29,16 +41,12 @@ export class AppAuthGuard implements CanActivate {
       return false;
     }
 
-    const user = await this.userRepository.findById(authorization);
+    const user = await authenticate(this.userRepository, authorization);
     if (!user) {
       return false;
     }
 
-    (request as any).user = new AuthContext({
-      id: user.getId(),
-      emailAddress: user.getEmailAddress(),
-    });
-
+    (request as any).user = user;
     return true;
   }
 }
