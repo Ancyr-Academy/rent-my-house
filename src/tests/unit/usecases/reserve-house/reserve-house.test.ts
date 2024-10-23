@@ -70,7 +70,7 @@ describe('Feature: reserving a house', () => {
       await commandHandler.execute(command);
 
       expect(
-        mailer.contains({
+        mailer.didSendMail({
           to: 'anthony@ancyracademy.fr',
           from: 'noreply@rentmyhouse.fr',
           subject: 'Your reservation',

@@ -4,7 +4,7 @@ import { IMailer } from '../../../application/ports/mailer';
 export class RamMailer implements IMailer {
   constructor(private readonly mails: Mail[] = []) {}
 
-  contains(config: { to: string; from: string; subject: string }) {
+  didSendMail(config: { to: string; from: string; subject: string }) {
     return this.mails.some((mail) => {
       return (
         mail.getTo() === config.to &&
