@@ -10,6 +10,10 @@ import {
   I_RESERVATION_REPOSITORY,
   IReservationRepository,
 } from '../../../application/ports/reservation-repository';
+import {
+  I_HOUSE_CALENDAR_REPOSITORY,
+  IHouseCalendarRepository,
+} from '../../../application/ports/house-calendar-repository';
 
 describe('Feature: reserving a house', () => {
   const tester = new Tester();
@@ -91,6 +95,15 @@ describe('Feature: reserving a house', () => {
           subject: 'You have a pending reservation',
         }),
       ).toBe(true);
+
+      const calendarRepository = tester.get<IHouseCalendarRepository>(
+        I_HOUSE_CALENDAR_REPOSITORY,
+      );
+      const calendar = await calendarRepository.findByHouseId('house-id');
+
+      expect(
+        calendar.isAvailable(new Date('2024-01-03'), new Date('2024-01-05')),
+      ).toBe(false);
     });
   });
 });
