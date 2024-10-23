@@ -24,7 +24,7 @@ export class AppController {
       new ReserveHouseCommand(
         body,
         new AuthContext({
-          id: '1',
+          id: 'anthony',
           emailAddress: 'anthony@ancyracademy.fr',
         }),
       ),

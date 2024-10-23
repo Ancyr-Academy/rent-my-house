@@ -1,3 +1,10 @@
+export type Entry = {
+  type: 'reservation';
+  id: string;
+  startDate: Date;
+  endDate: Date;
+};
+
 export type State = {
   houseId: string;
   entries: Array<{
@@ -17,6 +24,10 @@ export class HouseCalendar {
 
   getId() {
     return this.state.houseId;
+  }
+
+  getEntries() {
+    return this.state.entries;
   }
 
   isAvailable(startDate: Date, endDate: Date) {

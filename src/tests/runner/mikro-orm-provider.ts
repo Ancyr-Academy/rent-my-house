@@ -2,6 +2,10 @@ import { EntityName, MikroORM } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import path from 'path';
+import { SqlUser } from '../../infrastructure/database/sql/entities/sql-user';
+import { SqlHouse } from '../../infrastructure/database/sql/entities/sql-house';
+import { SqlHouseCalendar } from '../../infrastructure/database/sql/entities/sql-house-calendar';
+import { SqlReservation } from '../../infrastructure/database/sql/entities/sql-reservation';
 
 export class MikroOrmProvider {
   constructor(private orm: MikroORM) {}
@@ -47,5 +51,10 @@ export class MikroOrmProvider {
     this.orm.em.clear();
   }
 
-  async truncate() {}
+  async truncate() {
+    await this.orm.em.nativeDelete(SqlUser, {});
+    await this.orm.em.nativeDelete(SqlHouse, {});
+    await this.orm.em.nativeDelete(SqlHouseCalendar, {});
+    await this.orm.em.nativeDelete(SqlReservation, {});
+  }
 }
