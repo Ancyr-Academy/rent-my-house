@@ -45,7 +45,17 @@ describe('Feature: reserving a house', () => {
     idProvider = new FixedIdProvider('2');
     mailer = new RamMailer();
     houseCalendarRepository = new RamHouseCalendarRepository([
-      HouseCalendarFactory.create({ houseId: 'house-id' }),
+      HouseCalendarFactory.create({
+        houseId: 'house-id',
+        entries: [
+          {
+            type: 'reservation',
+            id: '1',
+            startDate: new Date('2024-01-04'),
+            endDate: new Date('2024-01-05'),
+          },
+        ],
+      }),
     ]);
 
     commandHandler = new ReserveHouseCommandHandler(
@@ -115,6 +125,23 @@ describe('Feature: reserving a house', () => {
 
       await expect(() => commandHandler.execute(command)).rejects.toThrow(
         'House not found',
+      );
+    });
+  });
+
+  describe('Scenario: the entry is not available', () => {
+    it('should reject', async () => {
+      const command = new ReserveHouseCommand(
+        {
+          houseId: 'house-id',
+          startDate: '2024-01-04',
+          endDate: '2024-01-05',
+        },
+        authContext,
+      );
+
+      await expect(() => commandHandler.execute(command)).rejects.toThrow(
+        'House is not available',
       );
     });
   });

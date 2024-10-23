@@ -37,6 +37,12 @@ export class ReserveHouseCommandHandler {
       house.getId(),
     );
 
+    if (
+      !calendar.isAvailable(new Date(data.startDate), new Date(data.endDate))
+    ) {
+      throw new Error('House is not available');
+    }
+
     const reservation = new Reservation({
       id: this.idProvider.nextId(),
       tenantId: auth.getId(),
