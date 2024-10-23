@@ -116,6 +116,12 @@ describe('Feature: reserving a house', () => {
         }),
       ).toBe(true);
     });
+
+    it('should return the ID of the reservation', async () => {
+      const result = await commandHandler.execute(command);
+      const reservation = await reservationRepository.findById(result.id);
+      expect(reservation).not.toBeNull();
+    });
   });
 
   describe('Scenario: the house does not exist', () => {

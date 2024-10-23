@@ -29,7 +29,7 @@ export class ReserveHouseCommandHandler {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute({ data, auth }: ReserveHouseCommand) {
+  async execute({ data, auth }: ReserveHouseCommand): Promise<{ id: string }> {
     const house = await this.houseRepository.findById(data.houseId);
     if (house === null) {
       throw new Error('House not found');
@@ -81,5 +81,9 @@ export class ReserveHouseCommandHandler {
         body: 'You have a new reservation request for your house',
       }),
     );
+
+    return {
+      id: reservation.getId(),
+    };
   }
 }
