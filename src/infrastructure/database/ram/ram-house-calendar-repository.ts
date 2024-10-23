@@ -4,13 +4,27 @@ import { HouseCalendar } from '../../../domain/entities/house-calendar';
 export class RamHouseCalendarRepository implements IHouseCalendarRepository {
   constructor(private readonly database: HouseCalendar[] = []) {}
 
-  async findByHouseId(houseId: string): Promise<HouseCalendar | null> {
-    return (
-      this.database.find((schedule) => schedule.getId() === houseId) ?? null
+  async save(entity: HouseCalendar): Promise<void> {
+    const idx = this.database.findIndex(
+      (entity) => entity.getId() === entity.getId(),
     );
+
+    if (idx >= 0) {
+      this.database[idx] = entity;
+      return;
+    }
+
+    this.database.push(entity);
   }
 
-  async save(schedule: HouseCalendar): Promise<void> {
-    this.database.push(schedule);
+  async findByHouseId(id: string): Promise<HouseCalendar | null> {
+    const entity =
+      this.database.find((entity) => entity.getId() === id) || null;
+
+    if (!entity) {
+      return null;
+    }
+
+    return entity.clone();
   }
 }

@@ -12,6 +12,10 @@ import {
   I_RESERVATION_REPOSITORY,
   IReservationRepository,
 } from '../../../application/ports/reservation-repository';
+import {
+  I_HOUSE_CALENDAR_REPOSITORY,
+  IHouseCalendarRepository,
+} from '../../../application/ports/house-calendar-repository';
 
 describe('Feature: accept a reservation', () => {
   const tester = new Tester();
@@ -45,6 +49,15 @@ describe('Feature: accept a reservation', () => {
       new HouseCalendarFixture(
         HouseCalendarFactory.create({
           houseId: 'house-id',
+          entries: [
+            {
+              type: 'reservation',
+              id: 'reservation-id',
+              startDate: new Date('2022-01-01'),
+              endDate: new Date('2022-01-10'),
+              status: 'PENDING',
+            },
+          ],
         }),
       ),
       new ReservationFixture(
@@ -74,6 +87,12 @@ describe('Feature: accept a reservation', () => {
       const reservation =
         await reservationRepository.findById('reservation-id');
       expect(reservation.isAccepted()).toBe(true);
+
+      const calendarRepository = tester.get<IHouseCalendarRepository>(
+        I_HOUSE_CALENDAR_REPOSITORY,
+      );
+      const calendar = await calendarRepository.findByHouseId('house-id');
+      expect(calendar.isReservationAccepted('reservation-id')).toBe(true);
     });
   });
 });

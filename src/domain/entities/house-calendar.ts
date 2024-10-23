@@ -10,6 +10,7 @@ export type State = {
   entries: Array<{
     type: 'reservation';
     id: string;
+    status: 'PENDING' | 'ACCEPTED';
     startDate: Date;
     endDate: Date;
   }>;
@@ -49,8 +50,39 @@ export class HouseCalendar {
     this.state.entries.push({
       type: 'reservation',
       id: reservationId,
+      status: 'PENDING',
       startDate,
       endDate,
+    });
+  }
+
+  isReservationAccepted(reservationId: string) {
+    const entry = this.state.entries.find(
+      (entry) => entry.type === 'reservation' && entry.id === reservationId,
+    );
+
+    return entry?.status === 'ACCEPTED';
+  }
+
+  markAsAccepted(id: string) {
+    this.state.entries = this.state.entries.map((entry) => {
+      if (entry.type === 'reservation' && entry.id === id) {
+        return {
+          ...entry,
+          status: 'ACCEPTED',
+        };
+      }
+
+      return entry;
+    });
+  }
+
+  clone() {
+    return new HouseCalendar({
+      houseId: this.state.houseId,
+      entries: this.state.entries.map((entry) => ({
+        ...entry,
+      })),
     });
   }
 }

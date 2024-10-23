@@ -3,6 +3,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 export type SqlEntry = {
   type: 'reservation';
   id: string;
+  status: 'PENDING' | 'ACCEPTED';
   startDate: string;
   endDate: string;
 };

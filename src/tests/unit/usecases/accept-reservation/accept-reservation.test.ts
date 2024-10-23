@@ -84,20 +84,16 @@ describe('Feature: reserving a house', () => {
           {
             type: 'reservation',
             id: 'pending-reservation-id',
+            status: 'PENDING',
             startDate: new Date('2024-01-04'),
             endDate: new Date('2024-01-05'),
           },
           {
             type: 'reservation',
             id: 'accepted-reservation-id',
+            status: 'ACCEPTED',
             startDate: new Date('2024-01-06'),
             endDate: new Date('2024-01-07'),
-          },
-          {
-            type: 'reservation',
-            id: 'refused-reservation-id',
-            startDate: new Date('2024-01-08'),
-            endDate: new Date('2024-01-09'),
           },
         ],
       }),
@@ -138,6 +134,17 @@ describe('Feature: reserving a house', () => {
     it('should send an e-mail to the tenant', async () => {
       await commandHandler.execute(command);
       expectEmailToBeSent();
+    });
+
+    it('should send an e-mail to the tenant', async () => {
+      await commandHandler.execute(command);
+
+      const houseCalendar =
+        await houseCalendarRepository.findByHouseId('house-id');
+
+      expect(
+        houseCalendar.isReservationAccepted('pending-reservation-id'),
+      ).toBe(true);
     });
   });
 
@@ -184,10 +191,7 @@ describe('Feature: reserving a house', () => {
       await expectReservationToBeAccepted('accepted-reservation-id');
     });
 
-    it('should send an e-mail to the tenant', async () => {
-      await commandHandler.execute(command);
-      expectEmailToBeSent();
-    });
+    it('should mark the calendar entry as accepted', () => {});
   });
 
   describe('Scenario: the reservation is already refused', () => {

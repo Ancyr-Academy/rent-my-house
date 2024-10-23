@@ -62,6 +62,14 @@ export class AcceptReservationCommandHandler {
 
     await this.reservationRepository.save(reservation);
 
+    const calendar = await this.houseCalendarRepository.findByHouseId(
+      reservation.getHouseId(),
+    );
+
+    calendar.markAsAccepted(reservation.getId());
+
+    await this.houseCalendarRepository.save(calendar);
+
     const tenant = await this.userRepository.findById(
       reservation.getTenantId(),
     );

@@ -20,6 +20,7 @@ export class SqlHouseCalendarRepository implements IHouseCalendarRepository {
       entries: entity.entries.map((entry) => ({
         id: entry.id,
         type: entry.type,
+        status: entry.status,
         startDate: new Date(entry.startDate),
         endDate: new Date(entry.endDate),
       })),
@@ -39,6 +40,7 @@ export class SqlHouseCalendarRepository implements IHouseCalendarRepository {
     record.entries = reservation.getEntries().map((entry) => ({
       id: entry.id,
       type: entry.type,
+      status: entry.status,
       startDate: entry.startDate.toISOString(),
       endDate: entry.endDate.toISOString(),
     }));
