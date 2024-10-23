@@ -6,6 +6,7 @@ import { AuthContext } from '../../domain/models/auth-context';
 import { Mail } from '../../domain/models/mail';
 import { IMailer } from '../ports/mailer';
 import { IHouseCalendarRepository } from '../ports/house-calendar-repository';
+import { IUserRepository } from '../ports/user-repository';
 
 export class ReserveHouseCommand {
   constructor(
@@ -25,6 +26,7 @@ export class ReserveHouseCommandHandler {
     private readonly idProvider: IIdProvider,
     private readonly mailer: IMailer,
     private readonly houseCalendarRepository: IHouseCalendarRepository,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute({ data, auth }: ReserveHouseCommand) {
@@ -67,6 +69,16 @@ export class ReserveHouseCommandHandler {
         from: 'noreply@rentmyhouse.fr',
         subject: 'Your reservation',
         body: 'Your reservation has been successfully sent to the owner of the house',
+      }),
+    );
+
+    const host = await this.userRepository.findById(house.getHostId());
+    await this.mailer.send(
+      new Mail({
+        to: host.getEmailAddress(),
+        from: 'noreply@rentmyhouse.fr',
+        subject: 'You have a pending reservation',
+        body: 'You have a new reservation request for your house',
       }),
     );
   }

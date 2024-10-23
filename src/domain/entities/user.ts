@@ -1,9 +1,9 @@
 type State = {
   id: string;
-  hostId: string;
+  emailAddress: string;
 };
 
-export class House {
+export class User {
   private state: State;
 
   constructor(state: State) {
@@ -14,7 +14,7 @@ export class House {
     return this.state.id;
   }
 
-  getHostId() {
-    return this.state.hostId;
+  getEmailAddress() {
+    return this.state.emailAddress;
   }
 }

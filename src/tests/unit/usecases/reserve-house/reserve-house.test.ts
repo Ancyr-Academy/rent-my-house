@@ -11,6 +11,8 @@ import { RamMailer } from '../../../../infrastructure/mailer/ram/ram-mailer';
 import { IHouseCalendarRepository } from '../../../../application/ports/house-calendar-repository';
 import { HouseCalendar } from '../../../../domain/entities/house-calendar';
 import { HouseCalendarFactory } from '../../../../domain/entities/house-calendar-factory';
+import { IUserRepository } from '../../../../application/ports/user-repository';
+import { User } from '../../../../domain/entities/user';
 
 class RamHouseCalendarRepository implements IHouseCalendarRepository {
   constructor(private readonly database: HouseCalendar[] = []) {}
@@ -26,12 +28,21 @@ class RamHouseCalendarRepository implements IHouseCalendarRepository {
   }
 }
 
+class RamUserRepository implements IUserRepository {
+  constructor(private readonly database: User[] = []) {}
+
+  async findById(id: string): Promise<User | null> {
+    return this.database.find((user) => user.getId() === id) ?? null;
+  }
+}
+
 describe('Feature: reserving a house', () => {
   let reservationRepository: RamReservationRepository;
   let houseRepository: RamHouseRepository;
   let idProvider: FixedIdProvider;
   let mailer: RamMailer;
   let houseCalendarRepository: RamHouseCalendarRepository;
+  let userRepository: RamUserRepository;
   let commandHandler: ReserveHouseCommandHandler;
 
   const authContext = new AuthContext({
@@ -41,7 +52,9 @@ describe('Feature: reserving a house', () => {
 
   beforeEach(() => {
     reservationRepository = new RamReservationRepository();
-    houseRepository = new RamHouseRepository([new House({ id: 'house-id' })]);
+    houseRepository = new RamHouseRepository([
+      new House({ id: 'house-id', hostId: 'host-id' }),
+    ]);
     idProvider = new FixedIdProvider('2');
     mailer = new RamMailer();
     houseCalendarRepository = new RamHouseCalendarRepository([
@@ -57,6 +70,9 @@ describe('Feature: reserving a house', () => {
         ],
       }),
     ]);
+    userRepository = new RamUserRepository([
+      new User({ id: 'host-id', emailAddress: 'host@rentmyhouse.fr' }),
+    ]);
 
     commandHandler = new ReserveHouseCommandHandler(
       reservationRepository,
@@ -64,6 +80,7 @@ describe('Feature: reserving a house', () => {
       idProvider,
       mailer,
       houseCalendarRepository,
+      userRepository,
     );
   });
 
@@ -109,6 +126,18 @@ describe('Feature: reserving a house', () => {
       expect(
         calendar.isAvailable(new Date('2024-01-01'), new Date('2024-01-02')),
       ).toBe(false);
+    });
+
+    it('should send an e-mail to the host', async () => {
+      await commandHandler.execute(command);
+
+      expect(
+        mailer.didSendMail({
+          to: 'host@rentmyhouse.fr',
+          from: 'noreply@rentmyhouse.fr',
+          subject: 'You have a pending reservation',
+        }),
+      ).toBe(true);
     });
   });
 
