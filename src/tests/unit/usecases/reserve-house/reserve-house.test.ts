@@ -8,33 +8,10 @@ import { RamHouseRepository } from '../../../../infrastructure/database/ram/ram-
 import { FixedIdProvider } from '../../../../application/services/id-provider/fixed-id-provider';
 import { AuthContext } from '../../../../domain/models/auth-context';
 import { RamMailer } from '../../../../infrastructure/mailer/ram/ram-mailer';
-import { IHouseCalendarRepository } from '../../../../application/ports/house-calendar-repository';
-import { HouseCalendar } from '../../../../domain/entities/house-calendar';
 import { HouseCalendarFactory } from '../../../../domain/entities/house-calendar-factory';
-import { IUserRepository } from '../../../../application/ports/user-repository';
 import { User } from '../../../../domain/entities/user';
-
-class RamHouseCalendarRepository implements IHouseCalendarRepository {
-  constructor(private readonly database: HouseCalendar[] = []) {}
-
-  async findByHouseId(houseId: string): Promise<HouseCalendar | null> {
-    return (
-      this.database.find((schedule) => schedule.getId() === houseId) ?? null
-    );
-  }
-
-  async save(schedule: HouseCalendar): Promise<void> {
-    this.database.push(schedule);
-  }
-}
-
-class RamUserRepository implements IUserRepository {
-  constructor(private readonly database: User[] = []) {}
-
-  async findById(id: string): Promise<User | null> {
-    return this.database.find((user) => user.getId() === id) ?? null;
-  }
-}
+import { RamUserRepository } from '../../../../infrastructure/database/ram/ram-user-repository';
+import { RamHouseCalendarRepository } from '../../../../infrastructure/database/ram/ram-house-calendar-repository';
 
 describe('Feature: reserving a house', () => {
   let reservationRepository: RamReservationRepository;
