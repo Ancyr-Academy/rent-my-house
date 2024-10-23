@@ -26,6 +26,7 @@ import { SqlHouse } from './infrastructure/database/sql/entities/sql-house';
 import { APP_GUARD } from '@nestjs/core';
 import { AppAuthGuard } from './application/auth/app-auth-guard';
 import { AcceptReservationCommandHandler } from './application/commands/accept-reservation';
+import { ViewReservationQueryHandler } from './application/queries/view-reservations';
 
 const entities = [SqlUser, SqlHouse, SqlHouseCalendar, SqlReservation];
 
@@ -100,6 +101,7 @@ const entities = [SqlUser, SqlHouse, SqlHouseCalendar, SqlReservation];
     AppService,
     ReserveHouseCommandHandler,
     AcceptReservationCommandHandler,
+    ViewReservationQueryHandler,
   ],
 })
 export class AppModule {}

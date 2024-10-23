@@ -10,6 +10,10 @@ import {
   AcceptReservation,
   AcceptReservationCommandHandler,
 } from '../commands/accept-reservation';
+import {
+  ViewReservationQuery,
+  ViewReservationQueryHandler,
+} from '../queries/view-reservations';
 
 @Controller()
 export class AppController {
@@ -17,6 +21,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly reserveHouseCommandHandler: ReserveHouseCommandHandler,
     private readonly acceptReservationCommandHandler: AcceptReservationCommandHandler,
+    private readonly viewReservationQueryHandler: ViewReservationQueryHandler,
   ) {}
 
   @Get()
@@ -39,6 +44,13 @@ export class AppController {
   ) {
     return this.acceptReservationCommandHandler.execute(
       new AcceptReservation(body, authContext),
+    );
+  }
+
+  @Get('view-reservations')
+  viewReservations(@WithAuthContext() authContext: AuthContext) {
+    return this.viewReservationQueryHandler.execute(
+      new ViewReservationQuery(null, authContext),
     );
   }
 }
