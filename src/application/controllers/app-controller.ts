@@ -5,6 +5,7 @@ import {
   ReserveHouseCommandHandler,
 } from '../commands/reserve-house';
 import { AuthContext } from '../../domain/models/auth-context';
+import { WithAuthContext } from '../auth/app-auth-guard';
 
 @Controller()
 export class AppController {
@@ -19,15 +20,9 @@ export class AppController {
   }
 
   @Post('reserve-house')
-  reserveHouse(@Body() body: any) {
+  reserveHouse(@Body() body: any, @WithAuthContext() authContext: AuthContext) {
     return this.reserveHouseCommandHandler.execute(
-      new ReserveHouseCommand(
-        body,
-        new AuthContext({
-          id: 'anthony',
-          emailAddress: 'anthony@ancyracademy.fr',
-        }),
-      ),
+      new ReserveHouseCommand(body, authContext),
     );
   }
 }

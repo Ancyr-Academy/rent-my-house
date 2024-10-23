@@ -22,10 +22,7 @@ describe('Smoke Test', () => {
 
   describe('Scenario: the user is not authenticated', () => {
     it('should fail', () => {
-      return request(tester.getHttpServer())
-        .get('/')
-        .expect(403)
-        .expect('Hello World!');
+      return request(tester.getHttpServer()).get('/').expect(403);
     });
   });
 

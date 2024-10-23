@@ -17,6 +17,12 @@ import {
 
 describe('Feature: reserving a house', () => {
   const tester = new Tester();
+  const user = new UserFixture(
+    new User({
+      id: 'anthony',
+      emailAddress: 'anthony@ancyracademy.fr',
+    }),
+  );
 
   beforeAll(() => tester.beforeAll());
   afterEach(() => tester.afterEach());
@@ -24,12 +30,7 @@ describe('Feature: reserving a house', () => {
   beforeEach(async () => {
     await tester.beforeEach();
     await tester.loadFixtures([
-      new UserFixture(
-        new User({
-          id: 'anthony',
-          emailAddress: 'anthony@ancyracademy.fr',
-        }),
-      ),
+      user,
       new UserFixture(
         new User({
           id: 'host',
@@ -59,6 +60,7 @@ describe('Feature: reserving a house', () => {
           startDate: '2024-01-03',
           endDate: '2024-01-05',
         })
+        .set('Authorization', user.authorize())
         .expect(201);
 
       expect(result.body).toEqual({
@@ -104,6 +106,19 @@ describe('Feature: reserving a house', () => {
       expect(
         calendar.isAvailable(new Date('2024-01-03'), new Date('2024-01-05')),
       ).toBe(false);
+    });
+  });
+
+  describe('Scenario: not authenticated', () => {
+    it('should reject', async () => {
+      return request(tester.getHttpServer())
+        .post('/reserve-house')
+        .send({
+          houseId: 'house-id',
+          startDate: '2024-01-03',
+          endDate: '2024-01-05',
+        })
+        .expect(403);
     });
   });
 });

@@ -23,6 +23,8 @@ import { SqlReservationRepository } from './infrastructure/database/sql/reposito
 import { SqlReservation } from './infrastructure/database/sql/entities/sql-reservation';
 import { SqlHouseCalendar } from './infrastructure/database/sql/entities/sql-house-calendar';
 import { SqlHouse } from './infrastructure/database/sql/entities/sql-house';
+import { APP_GUARD } from '@nestjs/core';
+import { AppAuthGuard } from './application/auth/app-auth-guard';
 
 const entities = [SqlUser, SqlHouse, SqlHouseCalendar, SqlReservation];
 
@@ -89,6 +91,10 @@ const entities = [SqlUser, SqlHouse, SqlHouseCalendar, SqlReservation];
     {
       provide: I_MAILER,
       useFactory: () => new RamMailer(),
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AppAuthGuard,
     },
     AppService,
     ReserveHouseCommandHandler,
