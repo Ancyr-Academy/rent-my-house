@@ -7,4 +7,8 @@ export class RamHouseRepository implements IHouseRepository {
   async findById(id: string): Promise<House | null> {
     return this.database.find((house) => house.getId() === id) || null;
   }
+
+  async save(entity: House): Promise<void> {
+    this.database.push(entity);
+  }
 }

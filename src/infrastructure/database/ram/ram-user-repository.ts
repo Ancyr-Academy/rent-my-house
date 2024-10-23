@@ -7,4 +7,8 @@ export class RamUserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {
     return this.database.find((user) => user.getId() === id) ?? null;
   }
+
+  async save(user: User): Promise<void> {
+    this.database.push(user);
+  }
 }

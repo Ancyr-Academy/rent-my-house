@@ -1,12 +1,25 @@
 import { Reservation } from '../../domain/entities/reservation';
-import { IIdProvider } from '../services/id-provider/id-provider';
-import { IHouseRepository } from '../ports/house-repository';
-import { IReservationRepository } from '../ports/reservation-repository';
+import {
+  I_ID_PROVIDER,
+  IIdProvider,
+} from '../services/id-provider/id-provider';
+import {
+  I_HOUSE_REPOSITORY,
+  IHouseRepository,
+} from '../ports/house-repository';
+import {
+  I_RESERVATION_REPOSITORY,
+  IReservationRepository,
+} from '../ports/reservation-repository';
 import { AuthContext } from '../../domain/models/auth-context';
 import { Mail } from '../../domain/models/mail';
-import { IMailer } from '../ports/mailer';
-import { IHouseCalendarRepository } from '../ports/house-calendar-repository';
-import { IUserRepository } from '../ports/user-repository';
+import { I_MAILER, IMailer } from '../ports/mailer';
+import {
+  I_HOUSE_CALENDAR_REPOSITORY,
+  IHouseCalendarRepository,
+} from '../ports/house-calendar-repository';
+import { I_USER_REPOSITORY, IUserRepository } from '../ports/user-repository';
+import { Inject, Injectable } from '@nestjs/common';
 
 export class ReserveHouseCommand {
   constructor(
@@ -19,13 +32,18 @@ export class ReserveHouseCommand {
   ) {}
 }
 
+@Injectable()
 export class ReserveHouseCommandHandler {
   constructor(
+    @Inject(I_RESERVATION_REPOSITORY)
     private readonly reservationRepository: IReservationRepository,
+    @Inject(I_HOUSE_REPOSITORY)
     private readonly houseRepository: IHouseRepository,
-    private readonly idProvider: IIdProvider,
-    private readonly mailer: IMailer,
+    @Inject(I_ID_PROVIDER) private readonly idProvider: IIdProvider,
+    @Inject(I_MAILER) private readonly mailer: IMailer,
+    @Inject(I_HOUSE_CALENDAR_REPOSITORY)
     private readonly houseCalendarRepository: IHouseCalendarRepository,
+    @Inject(I_USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
 

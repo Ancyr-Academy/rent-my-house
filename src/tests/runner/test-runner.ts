@@ -58,7 +58,7 @@ export class Tester implements ITester {
     }
   }
 
-  async initialize(fixtures: IFixture[]) {
+  async loadFixtures(fixtures: IFixture[]) {
     for (const fixture of fixtures) {
       await fixture.load(this);
     }

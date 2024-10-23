@@ -12,7 +12,7 @@ export interface ITester {
 
   afterAll(): Promise<any>;
 
-  initialize(fixtures: IFixture[]): Promise<void>;
+  loadFixtures(fixtures: IFixture[]): Promise<void>;
 
   getHttpServer(): http.Server;
 
